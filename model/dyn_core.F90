@@ -28,7 +28,7 @@ module dyn_core_mod
   use fv_mp_mod,          only: is_master
   use fv_mp_mod,          only: start_group_halo_update, complete_group_halo_update
   use fv_mp_mod,          only: group_halo_update_type
-  use sw_core_mod,        only: c_sw, d_sw
+!  use sw_core_mod,        only: c_sw, d_sw
   use a2b_edge_mod,       only: a2b_ord2, a2b_ord4
   use nh_core_mod,        only: Riem_Solver3, Riem_Solver_C, update_dz_c, update_dz_d, nest_halo_nh
   use tp_core_mod,        only: copy_corners
@@ -404,15 +404,15 @@ contains
 !$OMP parallel do default(none) shared(npz,isd,jsd,delpc,delp,ptc,pt,u,v,w,uc,vc,ua,va, &
 !$OMP                                  omga,ut,vt,divgd,flagstruct,dt2,hydrostatic,bd,  &
 !$OMP                                  gridstruct)
-      do k=1,npz
-         call c_sw(delpc(isd,jsd,k), delp(isd,jsd,k),  ptc(isd,jsd,k),    &
-                      pt(isd,jsd,k),    u(isd,jsd,k),    v(isd,jsd,k),    &
-                       w(isd:,jsd:,k),   uc(isd,jsd,k),   vc(isd,jsd,k),    &
-                      ua(isd,jsd,k),   va(isd,jsd,k), omga(isd,jsd,k),    &
-                      ut(isd,jsd,k),   vt(isd,jsd,k), divgd(isd,jsd,k),   &
-                      flagstruct%nord,   dt2,  hydrostatic,  .true., bd,  &
-                      gridstruct, flagstruct)
-      enddo
+      ! do k=1,npz
+      !    call c_sw(delpc(isd,jsd,k), delp(isd,jsd,k),  ptc(isd,jsd,k),    &
+      !                 pt(isd,jsd,k),    u(isd,jsd,k),    v(isd,jsd,k),    &
+      !                  w(isd:,jsd:,k),   uc(isd,jsd,k),   vc(isd,jsd,k),    &
+      !                 ua(isd,jsd,k),   va(isd,jsd,k), omga(isd,jsd,k),    &
+      !                 ut(isd,jsd,k),   vt(isd,jsd,k), divgd(isd,jsd,k),   &
+      !                 flagstruct%nord,   dt2,  hydrostatic,  .true., bd,  &
+      !                 gridstruct, flagstruct)
+      ! enddo
                                                      call timing_off('c_sw')
       if ( flagstruct%nord > 0 ) then
                                                    call timing_on('COMM_TOTAL')
@@ -495,7 +495,7 @@ contains
 
            endif
 
-#endif SW_DYNAMICS
+#endif !SW_DYNAMICS
 
       endif   ! end hydro check
 
@@ -649,20 +649,20 @@ contains
             enddo
          enddo
        endif
-       call d_sw(vt(isd,jsd,k), delp(isd,jsd,k), ptc(isd,jsd,k),  pt(isd,jsd,k),      &
-                  u(isd,jsd,k),    v(isd,jsd,k),   w(isd:,jsd:,k),  uc(isd,jsd,k),      &
-                  vc(isd,jsd,k),   ua(isd,jsd,k),  va(isd,jsd,k), divgd(isd,jsd,k),   &
-                  mfx(is, js, k),  mfy(is, js, k),  cx(is, jsd,k),  cy(isd,js, k),    &
-                  crx(is, jsd,k),  cry(isd,js, k), xfx(is, jsd,k), yfx(isd,js, k),    &
-#ifdef USE_COND
-                  q_con(isd:,jsd:,k),  z_rat(isd,jsd),  &
-#else
-                  q_con(isd:,jsd:,1),  z_rat(isd,jsd),  &
-#endif
-                  kgb, heat_s, zvir, sphum, nq,  q,  k,  npz, flagstruct%inline_q,  dt,  &
-                  flagstruct%hord_tr, hord_m, hord_v, hord_t, hord_p,    &
-                  nord_k, nord_v(k), nord_w, nord_t, flagstruct%dddmp, d2_divg, flagstruct%d4_bg,  &
-                  damp_vt(k), damp_w, damp_t, d_con_k, hydrostatic, gridstruct, flagstruct, bd)
+!        call d_sw(vt(isd,jsd,k), delp(isd,jsd,k), ptc(isd,jsd,k),  pt(isd,jsd,k),      &
+!                   u(isd,jsd,k),    v(isd,jsd,k),   w(isd:,jsd:,k),  uc(isd,jsd,k),      &
+!                   vc(isd,jsd,k),   ua(isd,jsd,k),  va(isd,jsd,k), divgd(isd,jsd,k),   &
+!                   mfx(is, js, k),  mfy(is, js, k),  cx(is, jsd,k),  cy(isd,js, k),    &
+!                   crx(is, jsd,k),  cry(isd,js, k), xfx(is, jsd,k), yfx(isd,js, k),    &
+! #ifdef USE_COND
+!                   q_con(isd:,jsd:,k),  z_rat(isd,jsd),  &
+! #else
+!                   q_con(isd:,jsd:,1),  z_rat(isd,jsd),  &
+! #endif
+!                   kgb, heat_s, zvir, sphum, nq,  q,  k,  npz, flagstruct%inline_q,  dt,  &
+!                   flagstruct%hord_tr, hord_m, hord_v, hord_t, hord_p,    &
+!                   nord_k, nord_v(k), nord_w, nord_t, flagstruct%dddmp, d2_divg, flagstruct%d4_bg,  &
+!                   damp_vt(k), damp_w, damp_t, d_con_k, hydrostatic, gridstruct, flagstruct, bd)
 
        if( hydrostatic .and. (.not.flagstruct%use_old_omega) .and. last_step ) then
 ! Average horizontal "convergence" to cell center
@@ -836,7 +836,7 @@ contains
         call complete_group_halo_update(i_pack(5), domain)
                                        call timing_off('COMM_TOTAL')
 	    endif
-#endif SW_DYNAMICS
+#endif !SW_DYNAMICS
      endif    ! end hydro check
 
 #ifdef SW_DYNAMICS
@@ -1019,7 +1019,7 @@ contains
                0, 0, npx, npy, npz, bd, split_timestep_BC+1, real(n_split*flagstruct%k_split), &
                neststruct%w_BC, bctype=neststruct%nestbctype  )
        end if
-#endif SW_DYNAMICS
+#endif !SW_DYNAMICS
             call nested_grid_BC_apply_intT(u, &
             0, 1, npx, npy, npz, bd, split_timestep_BC+1, real(n_split*flagstruct%k_split), &
             neststruct%u_BC, bctype=neststruct%nestbctype  )

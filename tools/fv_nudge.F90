@@ -39,7 +39,7 @@ module fv_nwp_nudge_mod
  use fv_grid_utils_mod, only: great_circle_dist, intp_great_circle
  use fv_grid_utils_mod, only: latlon2xyz, vect_cross, normalize_vect
  use fv_diagnostics_mod,only: prt_maxmin, fv_time
- use tp_core_mod,       only: copy_corners
+! use tp_core_mod,       only: copy_corners
  use fv_mapz_mod,       only: mappm
  use fv_mp_mod,         only: mp_reduce_sum, mp_reduce_min, mp_reduce_max, is_master
  use fv_timing_mod,     only: timing_on, timing_off
@@ -3475,8 +3475,8 @@ module fv_nwp_nudge_mod
 !$OMP                          private(fx, fy)
    do k=1,kmd
 
-      if(nt>0) call copy_corners(q(isd,jsd,k), npx, npy, 1, nested, bd, &
-           sw_corner, se_corner, nw_corner, ne_corner)
+!      if(nt>0) call copy_corners(q(isd,jsd,k), npx, npy, 1, nested, bd, &
+!           sw_corner, se_corner, nw_corner, ne_corner)
       do j=js-nt,je+nt
          do i=is-nt,ie+1+nt
             fx(i,j) = dy(i,j)*sina_u(i,j)*(q(i-1,j,k)-q(i,j,k))*rdxc(i,j)
@@ -3487,8 +3487,8 @@ module fv_nwp_nudge_mod
             0.5*(sin_sg(npx,j,1) + sin_sg(npx-1,j,3))
       enddo
 
-      if(nt>0) call copy_corners(q(isd,jsd,k), npx, npy, 2, nested, bd, &
-           sw_corner, se_corner, nw_corner, ne_corner)
+!      if(nt>0) call copy_corners(q(isd,jsd,k), npx, npy, 2, nested, bd, &
+!           sw_corner, se_corner, nw_corner, ne_corner)
       do j=js-nt,je+1+nt
          if (j == 1 .OR. j == npy) then
             do i=is-nt,ie+nt

@@ -57,7 +57,7 @@ module external_ic_mod
    use fv_eta_mod,        only: set_eta
    use sim_nc_mod,        only: open_ncfile, close_ncfile, get_ncdim1, get_var1_double, get_var2_real,   &
                                 get_var3_r4, get_var2_r4, get_var1_real, get_var_att_double
-   use fv_nwp_nudge_mod,  only: T_is_Tv
+!   use fv_nwp_nudge_mod,  only: T_is_Tv
    use test_cases_mod,    only: checker_tracers
 
 ! The "T" field in NCEP analysis is actually virtual temperature (Larry H. post processing)
@@ -2173,6 +2173,7 @@ contains
   integer  sphum, o3mr, clwmr
   integer :: is,  ie,  js,  je
   integer :: isd, ied, jsd, jed
+  logical :: T_is_Tv = .true.
 
   is  = Atm%bd%is
   ie  = Atm%bd%ie
