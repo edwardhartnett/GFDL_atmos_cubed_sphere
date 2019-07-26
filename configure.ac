@@ -65,9 +65,9 @@ AC_DEFINE([SPMD], [1])
 # These files will be created when the configure script is run.
 AC_CONFIG_FILES([Makefile
         driver/Makefile
+        driver/GFDL/Makefile
         tools/Makefile
         GFDL_tools/Makefile
-        GFDL_tools/GFDL/Makefile
         model/Makefile
         model_nh_null/Makefile
         ])
