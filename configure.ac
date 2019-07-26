@@ -67,6 +67,7 @@ AC_CONFIG_FILES([Makefile
         driver/Makefile
         tools/Makefile
         GFDL_tools/Makefile
+        GFDL_tools/GFDL/Makefile
         model/Makefile
         model_nh_null/Makefile
         ])
