@@ -68,6 +68,6 @@ AC_CONFIG_FILES([Makefile
         tools/Makefile
         GFDL_tools/Makefile
         model/Makefile
-        model_nh_null
+        model_nh_null/Makefile
         ])
 AC_OUTPUT()
